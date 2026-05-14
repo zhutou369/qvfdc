@@ -45,7 +45,6 @@ h1, h2, h3 { color: var(--whatsapp-dark); }
         <aside class="sidebar">
             <h3>最近更新文章</h3>
             <ul class="post-list">
-
             {%- for post in collections.blog | reverse -%}
             <a href="{{ post.url }}" class="article-item">
                 <div class="article-content-wrapper">
@@ -53,10 +52,15 @@ h1, h2, h3 { color: var(--whatsapp-dark); }
                 </div>
             </a>
             {%- endfor -%}
+                
+                <li><a href="#">如何优化 whatsapp官方 连接响应速度？</a></li>
+                <li><a href="#">2026年 whatapp web 安全升级公告</a></li>
+                <li><a href="#">whats官方网页版 常见报错及排查手册</a></li>
+                <li><a href="#">whatsapp网页版登录 独立在线功能详解</a></li>
+                <li><a href="#">whatapp网页版登入 隐私权限设置指南</a></li>
+                <li><a href="#">针对 whatsapp在线登陆 的双重验证开启步骤</a></li>
+            </ul>
         </div>
-    </aside>
-</div>
-    </div>
     <footer class="footer">
         <div class="friend-links">
             友情链接：
