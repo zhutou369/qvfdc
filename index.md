@@ -46,8 +46,8 @@ h1, h2, h3 { color: var(--whatsapp-dark); }
             <h3>最近更新文章</h3>
             <ul class="post-list">
                  {%- for post in collections.blog | reverse -%}
-                <li><a href="{{ post.url }}" class="article-item"></li>
-                 <h2 class="article-title">{{ post.data.title }}</h2>
+                <li><a href="{{ post.url }}" class="post-item">{{ post.data.title }}</a></li>
+
                 {% else %}
                 <li><a href="#">2026年最新安全协议升级解析</a></li>
                 <li><a href="#">如何优化多端同步响应速度</a></li>
