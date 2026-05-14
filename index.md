@@ -64,7 +64,7 @@ h1, h2, h3 { color: var(--whatsapp-dark); }
     <footer class="footer">
         <div class="friend-links">
             友情链接：
-            <a href="http://qhqrl.com" id="link_0">whatsapp网页版登录</a> <a href="http://qhsdk.com" id="link_1">WhatsApp web</a> <a href="http://qvfdc.com" id="link_2">whatsapp网页版</a> <a href="http://rcqry.com" id="link_3">whatsapp网页版登入</a> <a href="http://rdqjm.com" id="link_4">whatsapp官方</a>
+            <a href="https://qhqrl.com" id="link_0">whatsapp网页版登录</a> <a href="https://ctysd.cn" id="link_1">WhatsApp web</a> <a href="https://qvfdc.com" id="link_2">whatsapp网页版</a> <a href="https://rcqry.com" id="link_3">whatsapp网页版登入</a> <a href="https://rdqjm.com" id="link_4">whatsapp官方</a>
         </div>
         <p style="margin-top:20px;">© 2026 whatapp网页版登录 指南中心. 保留所有权利.</p>
     </footer>
