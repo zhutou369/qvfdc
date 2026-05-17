@@ -1,4 +1,6 @@
-
+---
+# 这里是你的 Front Matter 配置，母版会自动渲染
+---
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,24 +8,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} - whatapp网页版登录</title>
     <style>
-:root { --whatsapp-green: #25D366; --whatsapp-dark: #075E54; --bg-light: #f4f7f6; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.8; color: #333; background: var(--bg-light); margin: 0; padding: 0; }
-.header { background: var(--whatsapp-dark); color: white; padding: 40px 20px; text-align: center; }
-.nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-.container { max-width: 1200px; margin: 30px auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
-.main-content { background: white; padding: 40px; border-radius: 12px; shadow: 0 4px 12px rgba(0,0,0,0.05); }
-.sidebar { background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; height: fit-content; }
-.article-img { width: 100%; border-radius: 8px; margin: 20px 0; max-height: 400px; object-fit: cover; }
-h1, h2, h3 { color: var(--whatsapp-dark); }
-.post-list { list-style: none; padding: 0; }
-.post-list li { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #eee; }
-.post-list a { text-decoration: none; color: #444; font-size: 15px; transition: 0.3s; }
-.post-list a:hover { color: var(--whatsapp-green); }
-.footer { background: #333; color: #fff; padding: 50px 20px; margin-top: 50px; text-align: center; }
-.friend-links a { color: #aaa; margin: 0 10px; text-decoration: none; font-size: 14px; }
-.friend-links a:hover { color: #fff; }
-@media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
-</style>
+        :root { --whatsapp-green: #25D366; --whatsapp-dark: #075E54; --bg-light: #f4f7f6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.8; color: #333; background: var(--bg-light); margin: 0; padding: 0; }
+        .header { background: var(--whatsapp-dark); color: white; padding: 40px 20px; text-align: center; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1200px; margin: 30px auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
+        .main-content { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .sidebar { background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; height: fit-content; }
+        .article-img { width: 100%; border-radius: 8px; margin: 20px 0; max-height: 400px; object-fit: cover; }
+        h1, h2, h3 { color: var(--whatsapp-dark); }
+        
+        /* 🎯 列表页导航（面包屑）专属优化样式 */
+        .breadcrumb-nav { font-size: 14px; color: #777; margin: -10px 0 25px 0; padding-bottom: 12px; border-bottom: 1px dashed #eee; }
+        .breadcrumb-nav a { color: var(--whatsapp-dark); text-decoration: none; font-weight: 500; }
+        .breadcrumb-nav a:hover { color: var(--whatsapp-green); text-decoration: underline; }
+
+        /* 文章上下页翻页美化 */
+        .prev-next-box p { font-size: 15px; margin: 10px 0; }
+        .prev-next-box a { color: var(--whatsapp-dark); text-decoration: none; }
+        .prev-next-box a:hover { color: var(--whatsapp-green); text-decoration: underline; }
+
+        .post-list { list-style: none; padding: 0; margin: 0; }
+        .post-list li { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #eee; }
+        .post-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .post-list a { text-decoration: none; color: #444; font-size: 15px; transition: 0.3s; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .post-list a:hover { color: var(--whatsapp-green); padding-left: 5px; }
+
+        /* 侧边栏“更多列表”直达按钮 */
+        .more-articles-wrap { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
+        .more-articles-link { display: block; padding: 8px; background: var(--whatsapp-dark); color: #fff !important; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; }
+        .more-articles-link:hover { background: var(--whatsapp-green); }
+
+        .footer { background: #333; color: #fff; padding: 50px 20px; margin-top: 50px; text-align: center; }
+        .friend-links a { color: #aaa; margin: 0 10px; text-decoration: none; font-size: 14px; }
+        .friend-links a:hover { color: #fff; }
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+    </style>
     <!-- 51.la 统计代码 -->
     <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
     <script>LA.init({id:"3K7l95Zodr0uFrIN",ck:"3K7l95Zodr0uFrIN"})</script>
@@ -35,27 +55,51 @@ h1, h2, h3 { color: var(--whatsapp-dark); }
     <div class="container">
         <main class="main-content">
             <article>
+                <!-- 🎯 核心升级：面包屑导航，直接建立与列表页（/blog/）的强连接，对蜘蛛抓取极好 -->
+                <div class="breadcrumb-nav">
+                    当前位置：<a href="/">首页入口</a> &gt; <a href="/blog/">文章列表页</a> &gt; 正文内容
+                </div>
+
                 {{ content | safe }}
-                <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
+                
+                <div class="prev-next-box" style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
                     {% if prevPost %}<p>上一篇：<a href="{{ prevPost.url }}">{{ prevPost.data.title }}</a></p>{% endif %}
                     {% if nextPost %}<p>下一篇：<a href="{{ nextPost.url }}">{{ nextPost.data.title }}</a></p>{% endif %}
                 </div>
             </article>
         </main>
+        
         <aside class="sidebar">
             <h3>更多相关资讯</h3>
             <ul class="post-list">
-                {% for post in collections.blog %}
-                <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+                <!-- 🎯 安全加锁升级：限制侧边栏仅展示最新 5 篇文章，防止文章过多撑破页面布局 -->
+                {% set count = 0 %}
+                {% for post in collections.blog | reverse %}
+                    {% if count < 5 %}
+                        <li><a href="{{ post.url }}" title="{{ post.data.title }}">{{ post.data.title }}</a></li>
+                        {% set count = count + 1 %}
+                    {% endif %}
+                {% else %}
+                    <li style="color: #999; padding: 10px; font-size: 14px;">暂无更新内容</li>
                 {% endfor %}
             </ul>
+
+            <!-- 一键直达完整列表页导航组件 -->
+            <div class="more-articles-wrap">
+                <a href="/blog/" class="more-articles-link">查看完整文章列表 &raquo;</a>
+            </div>
         </aside>
     </div>
     <footer class="footer">
         <div class="friend-links">
             友情链接：
-            <a href="https://qhqrl.com">whatsapp网页版登录</a> <a href="https://ctysd.cn">WhatsApp web</a> <a href="https://qvfdc.com">whatsapp网页版</a> <a href="https://rcqry.com">whatsapp网页版登入</a> <a href="https://rdqjm.com">whatsapp官方</a>
+            <a href="https://qhqrl.com">whatsapp网页版登录</a> 
+            <a href="https://ctysd.cn">WhatsApp web</a> 
+            <a href="https://qvfdc.com">whatsapp网页版</a> 
+            <a href="https://rcqry.com">whatsapp网页版登入</a> 
+            <a href="https://rdqjm.com">whatsapp官方</a>
         </div>
+        <p style="margin-top:20px; font-size:13px; color:#aaa;">© 2026 whatapp网页版登录 指南中心. 保留所有权利.</p>
     </footer>
 </body>
 </html>
