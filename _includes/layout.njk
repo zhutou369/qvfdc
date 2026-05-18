@@ -7,10 +7,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} - whatapp网页版登录</title>
+    <meta name="description" content="{{ description }}">
     <style>
         :root { --whatsapp-green: #25D366; --whatsapp-dark: #075E54; --bg-light: #f4f7f6; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.8; color: #333; background: var(--bg-light); margin: 0; padding: 0; }
+        
+        /* 🎯 样式微调：支持 div 作为页头 logo 容器 */
         .header { background: var(--whatsapp-dark); color: white; padding: 40px 20px; text-align: center; }
+        .header .logo-text { font-size: 32px; font-weight: bold; margin: 0; color: white; }
+        
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .container { max-width: 1200px; margin: 30px auto; display: grid; grid-template-columns: 1fr 320px; gap: 30px; padding: 0 20px; }
         .main-content { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
@@ -44,18 +49,16 @@
         .friend-links a:hover { color: #fff; }
         @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
     </style>
-    <!-- 51.la 统计代码 -->
     <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
     <script>LA.init({id:"3K7l95Zodr0uFrIN",ck:"3K7l95Zodr0uFrIN"})</script>
 </head>
 <body>
     <header class="header">
-        <h1>{{ title }}</h1>
+        <div class="logo-text">{{ title }}</div>
     </header>
     <div class="container">
         <main class="main-content">
             <article>
-                <!-- 🎯 核心升级：面包屑导航，直接建立与列表页（/blog/）的强连接，对蜘蛛抓取极好 -->
                 <div class="breadcrumb-nav">
                     当前位置：<a href="/">首页入口</a> &gt; <a href="/blog/">文章列表页</a> &gt; 正文内容
                 </div>
@@ -72,7 +75,6 @@
         <aside class="sidebar">
             <h3>更多相关资讯</h3>
             <ul class="post-list">
-                <!-- 🎯 安全加锁升级：限制侧边栏仅展示最新 5 篇文章，防止文章过多撑破页面布局 -->
                 {% set count = 0 %}
                 {% for post in collections.blog | reverse %}
                     {% if count < 5 %}
@@ -84,7 +86,6 @@
                 {% endfor %}
             </ul>
 
-            <!-- 一键直达完整列表页导航组件 -->
             <div class="more-articles-wrap">
                 <a href="/blog/" class="more-articles-link">查看完整文章列表 &raquo;</a>
             </div>
