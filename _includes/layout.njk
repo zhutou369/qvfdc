@@ -12,7 +12,6 @@
         :root { --whatsapp-green: #25D366; --whatsapp-dark: #075E54; --bg-light: #f4f7f6; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.8; color: #333; background: var(--bg-light); margin: 0; padding: 0; }
         
-        /* 🎯 样式微调：支持 div 作为页头 logo 容器 */
         .header { background: var(--whatsapp-dark); color: white; padding: 40px 20px; text-align: center; }
         .header .logo-text { font-size: 32px; font-weight: bold; margin: 0; color: white; }
         
@@ -23,15 +22,14 @@
         .article-img { width: 100%; border-radius: 8px; margin: 20px 0; max-height: 400px; object-fit: cover; }
         h1, h2, h3 { color: var(--whatsapp-dark); }
         
-        /* 🎯 列表页导航（面包屑）专属优化样式 */
         .breadcrumb-nav { font-size: 14px; color: #777; margin: -10px 0 25px 0; padding-bottom: 12px; border-bottom: 1px dashed #eee; }
         .breadcrumb-nav a { color: var(--whatsapp-dark); text-decoration: none; font-weight: 500; }
         .breadcrumb-nav a:hover { color: var(--whatsapp-green); text-decoration: underline; }
 
-        /* 文章上下页翻页美化 */
-        .prev-next-box p { font-size: 15px; margin: 10px 0; }
-        .prev-next-box a { color: var(--whatsapp-dark); text-decoration: none; }
+        .prev-next-box p { font-size: 15px; margin: 12px 0; }
+        .prev-next-box a { color: var(--whatsapp-dark); text-decoration: none; font-weight: 500; }
         .prev-next-box a:hover { color: var(--whatsapp-green); text-decoration: underline; }
+        .nav-disabled { color: #999; font-size: 14px; }
 
         .post-list { list-style: none; padding: 0; margin: 0; }
         .post-list li { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #eee; }
@@ -39,7 +37,6 @@
         .post-list a { text-decoration: none; color: #444; font-size: 15px; transition: 0.3s; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .post-list a:hover { color: var(--whatsapp-green); padding-left: 5px; }
 
-        /* 侧边栏“更多列表”直达按钮 */
         .more-articles-wrap { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
         .more-articles-link { display: block; padding: 8px; background: var(--whatsapp-dark); color: #fff !important; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; }
         .more-articles-link:hover { background: var(--whatsapp-green); }
@@ -54,7 +51,9 @@
 </head>
 <body>
     <header class="header">
-        <div class="logo-text">{{ title }}</div>
+        {% if "<h1" not in content %}
+            <div class="logo-text">{{ title }}</div>
+        {% endif %}
     </header>
     <div class="container">
         <main class="main-content">
@@ -66,8 +65,25 @@
                 {{ content | safe }}
                 
                 <div class="prev-next-box" style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
-                    {% if prevPost %}<p>上一篇：<a href="{{ prevPost.url }}">{{ prevPost.data.title }}</a></p>{% endif %}
-                    {% if nextPost %}<p>下一篇：<a href="{{ nextPost.url }}">{{ nextPost.data.title }}</a></p>{% endif %}
+                    {% set prevPost = collections.blog | getPreviousCollectionItem(page) %}
+                    {% set nextPost = collections.blog | getNextCollectionItem(page) %}
+                    
+                    <p>
+                        <strong>← 上一篇：</strong>
+                        {% if prevPost %}
+                            <a href="{{ prevPost.url }}">{{ prevPost.data.title }}</a>
+                        {% else %}
+                            <span class="nav-disabled">已经是最新第一篇技术文章了</span>
+                        {% endif %}
+                    </p>
+                    <p>
+                        <strong>→ 下一篇：</strong>
+                        {% if nextPost %}
+                            <a href="{{ nextPost.url }}">{{ nextPost.data.title }}</a>
+                        {% else %}
+                            <span class="nav-disabled">敬请期待博主下一期技术专案更新</span>
+                        {% endif %}
+                    </p>
                 </div>
             </article>
         </main>
