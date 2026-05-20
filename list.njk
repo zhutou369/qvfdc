@@ -1,7 +1,6 @@
 ---
 title: ws网页版登录
 layout: layout.njk
-# 🎯 修复点 1：完美补齐列表页专属的 Meta Description，防止继承母版时变为空白
 description: "提供权威的ws网页版登录文章资讯中心，实时更新2026最新官方登录入口、扫码技巧及跨境通讯安全防封指南。"
 pagination:
   data: collections.blog
@@ -9,6 +8,7 @@ pagination:
   alias: posts
   reverse: true
 
+# 🌟 核心修正：精准对齐 11ty 分页索引（首页为 blog/index.html，后随分页按 page-1、page-2 完美渲染）
 permalink: "blog/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumber }}/{% endif %}index.html"
 ---
 
