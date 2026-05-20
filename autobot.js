@@ -19,6 +19,31 @@ async function runAutoBot() {
     // 2. 初始化 Gemini 客户端
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
+    // 🛡️ 【新增】带重试机制的內容生成函式（最多连续尝试 3 次，遇到 503/429 原地静默等待）
+    async function generateContentWithRetry(prompt, maxRetries = 3, initialDelay = 5000) {
+        let currentDelay = initialDelay;
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                return await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: prompt,
+                });
+            } catch (error) {
+                // 兼容不同 SDK 版本返回的错误格式（检查状态码或错误讯息）
+                const is503 = error.status === 503 || (error.message && error.message.includes('503'));
+                const is429 = error.status === 429 || (error.message && error.message.includes('429'));
+                
+                if ((is503 || is429) && i < maxRetries - 1) {
+                    console.warn(`⚠️ [API 波动] 触发 ${is503 ? '503 拥塞' : '429 限流'}。将在 ${currentDelay / 1000} 秒后进行第 ${i + 1} 次原地静默重试...`);
+                    await new Promise(resolve => setTimeout(resolve, currentDelay));
+                    currentDelay *= 2; // 指数级延长等待时间：5秒 -> 10秒 -> 20秒
+                    continue;
+                }
+                throw error; // 其他致命错误（如 400 认证错误）或重试耗尽，直接抛出
+            }
+        }
+    }
+
     // 文件路径切回标准的 .json 格式
     const jsonPath = path.join(__dirname, 'keywords.json');   
     const imagesPath = path.join(__dirname, 'images.txt'); 
@@ -121,10 +146,8 @@ async function runAutoBot() {
 
         try {
             console.log('正在连接 Gemini API 生产高质量内容...');
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-            });
+            // 🔥 【修改】改用上方封裝的智能重试核心函数，預設重試 3 次，首輪延遲 5000 毫秒
+            const response = await generateContentWithRetry(prompt, 3, 5000);
 
             const articleContent = response.text;
             if (!articleContent) {
@@ -148,7 +171,7 @@ async function runAutoBot() {
         }
     }
 
-    // 🌟 【重构重点】：当所有的循环（如5次）全部执行完毕完毕后，再一次性回写成标准的 JSON 数组格式
+    // 🌟 当所有的循环全部执行完毕完毕后，再一次性回写成标准的 JSON 数组格式
     try {
         fs.writeFileSync(jsonPath, JSON.stringify(keywords, null, 2), 'utf-8');
         console.log(`\n📉 词库整体更新完毕！剩余可用关键词数: ${keywords.length}`);
