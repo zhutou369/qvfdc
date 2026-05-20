@@ -19,7 +19,7 @@ async function runAutoBot() {
     // 2. 初始化 Gemini 客户端
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
-    // 🛡️ 【新增】带重试机制的內容生成函式（最多连续尝试 3 次，遇到 503/429 原地静默等待）
+    // 🛡️ 带重试机制的內容生成函式（最多连续尝试 3 次，遇到 503/429 原地静默等待）
     async function generateContentWithRetry(prompt, maxRetries = 3, initialDelay = 5000) {
         let currentDelay = initialDelay;
         for (let i = 0; i < maxRetries; i++) {
@@ -29,22 +29,21 @@ async function runAutoBot() {
                     contents: prompt,
                 });
             } catch (error) {
-                // 兼容不同 SDK 版本返回的错误格式（检查状态码或错误讯息）
                 const is503 = error.status === 503 || (error.message && error.message.includes('503'));
                 const is429 = error.status === 429 || (error.message && error.message.includes('429'));
                 
                 if ((is503 || is429) && i < maxRetries - 1) {
                     console.warn(`⚠️ [API 波动] 触发 ${is503 ? '503 拥塞' : '429 限流'}。将在 ${currentDelay / 1000} 秒后进行第 ${i + 1} 次原地静默重试...`);
                     await new Promise(resolve => setTimeout(resolve, currentDelay));
-                    currentDelay *= 2; // 指数级延长等待时间：5秒 -> 10秒 -> 20秒
+                    currentDelay *= 2; 
                     continue;
                 }
-                throw error; // 其他致命错误（如 400 认证错误）或重试耗尽，直接抛出
+                throw error; 
             }
         }
     }
 
-    // 文件路径切回标准的 .json 格式
+    // 文件路径保持纯净根目录设计
     const jsonPath = path.join(__dirname, 'keywords.json');   
     const imagesPath = path.join(__dirname, 'images.txt'); 
     
@@ -67,13 +66,13 @@ async function runAutoBot() {
         return;
     }
 
-    // 调整生成数量：如果输入的数量大于词库剩余词量，以词库剩余数量为准
+    // 调整生成数量
     if (maxPosts > keywords.length) {
         console.log(`💡 提示：输入的数量 ${maxPosts} 大于词库剩余词量 ${keywords.length}，将生成现存的全部文章。`);
         maxPosts = keywords.length;
     }
 
-    // 🌟 将文章生成的“核心步骤”打包塞入 for 循环，实现批量生成
+    // 🌟 批量生成循环
     for (let currentLoop = 0; currentLoop < maxPosts; currentLoop++) {
         console.log(`\n------------------ 正在处理第 ${currentLoop + 1} / ${maxPosts} 篇 ------------------`);
 
@@ -121,6 +120,7 @@ async function runAutoBot() {
         }
 
         // 7. 构造终极 SEO Prompt 模板
+        // 🌟 核心修正：將 tags 修正為 ["blog", "SEO"]，與你的模板集合完全對齊，打通上下篇與側邊欄資料流！
         const prompt = `
     你是一个精通技术SEO和前沿网络技术的专家博主。请针对主题 "${currentTopic}" 撰写一篇深入、对用户有极高价值的原创文章。
     
@@ -133,20 +133,21 @@ async function runAutoBot() {
     title: "${currentTopic}"
     description: "针对${currentTopic}的专业技术解析与实操指南。"
     date: ${todayStr}
-    tags: ["posts", "SEO"]
+    tags: ["blog", "SEO"]
     layout: "layout.njk"
-    permalink: "/posts/${todayStr}-"你的纯英文短语"-${randomId}/index.html"
+    permalink: "/blog/${todayStr}-"你的纯英文短语"-${randomId}/index.html"
     ---
 
     【注意】：请务必将上面 permalink 里面的 "你的纯英文短语" 替换为你真正翻译出来的英文 Slug。不要保留引号。
     ${imagePromptInstruction}
+
+    5. ⚠️【特别限制】：严禁在正文的第一行或任何地方生成 # 标题（即一级的 <h1> 标签）。文章正文必须直接从第一个二级标题（##）或引导段落开始撰写，防止与母版外壳的标题产生 SEO 重复冲突。
 
     这里开始写文章正文。请多用二级标题（##）、三级标题（###）对内容进行多层级切分，保证极佳的SEO可读性与结构性。
         `;
 
         try {
             console.log('正在连接 Gemini API 生产高质量内容...');
-            // 🔥 【修改】改用上方封裝的智能重试核心函数，預設重試 3 次，首輪延遲 5000 毫秒
             const response = await generateContentWithRetry(prompt, 3, 5000);
 
             const articleContent = response.text;
@@ -154,7 +155,6 @@ async function runAutoBot() {
                 throw new Error("Gemini 返回内容为空");
             }
 
-            // 为了防止同秒内生成的 randomId 撞车，加上 currentLoop 索引增加唯一性
             const fileName = `${todayStr}-post-${randomId}-${currentLoop}.md`;
             const outputDir = path.join(__dirname, 'posts'); 
             if (!fs.existsSync(outputDir)) {
@@ -166,12 +166,11 @@ async function runAutoBot() {
 
         } catch (error) {
             console.error(`❌ 第 ${currentLoop + 1} 篇文章生成遭遇错误:`, error.message);
-            // 如果某一篇失败了，把当前错过的词塞回去，防止词库无故丢失
             keywords.unshift(currentTopic);
         }
     }
 
-    // 🌟 当所有的循环全部执行完毕完毕后，再一次性回写成标准的 JSON 数组格式
+    // 批量生成完毕后，一次性回写更新词库
     try {
         fs.writeFileSync(jsonPath, JSON.stringify(keywords, null, 2), 'utf-8');
         console.log(`\n📉 词库整体更新完毕！剩余可用关键词数: ${keywords.length}`);
